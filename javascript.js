@@ -53,6 +53,7 @@ window.addEventListener("load", function () {
       this.speedY = 0;
       this.maxSpeedY = 3;
       this.projectiles = [];
+      this.lives = 100;
     }
     update() {
       if (this.game.keys.includes("ArrowUp")) {
@@ -73,6 +74,9 @@ window.addEventListener("load", function () {
     draw(context) {
       context.fillStyle = "black";
       context.fillRect(this.x, this.y, this.width, this.height);
+      context.fillStyle = "red";
+      context.font = "20px Helvetica";
+      context.fillText(this.lives, this.x, this.y);
       this.projectiles.forEach((projectile) => {
         projectile.draw(context);
       });
@@ -163,6 +167,7 @@ window.addEventListener("load", function () {
         enemy.update();
         if (this.checkCollision(this.player, enemy)) {
           enemy.markedForDeletion = true;
+          this.player.lives--;
         }
         this.player.projectiles.forEach((projectile) => {
           if (this.checkCollision(projectile, enemy)) {
