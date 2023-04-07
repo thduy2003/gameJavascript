@@ -119,8 +119,45 @@ window.addEventListener("load", function () {
       this.y = Math.random() * (this.game.height * 0.9 - this.height);
     }
   }
-  class Layer {}
-  class Background {}
+  class Layer {
+    constructor(game, image, speedModifier) {
+      this.game = game;
+      this.image = image;
+      this.speedModifier = speedModifier;
+      this.width = 1768;
+      this.height = 700;
+      this.x = 0;
+      this.y = 0;
+    }
+    update() {
+      if (this.x <= -this.width) this.x = 0;
+      else this.x -= this.game.speed * this.speedModifier;
+    }
+    draw(context) {
+      context.drawImage(this.image, this.x, this.y);
+      context.drawImage(this.image, this.x + this.width, this.y);
+    }
+  }
+  class Background {
+    constructor(game) {
+      this.game = game;
+      this.image1 = document.getElementById("layer1");
+      this.image2 = document.getElementById("layer2");
+      this.image3 = document.getElementById("layer3");
+      this.image4 = document.getElementById("layer4");
+      this.layer1 = new Layer(this.game, this.image1, 0.2);
+      this.layer2 = new Layer(this.game, this.image2, 0.4);
+      this.layer3 = new Layer(this.game, this.image3, 1);
+      this.layer4 = new Layer(this.game, this.image4, 1.3);
+      this.layers = [this.layer1, this.layer2, this.layer3];
+    }
+    update() {
+      this.layers.forEach((layer) => layer.update());
+    }
+    draw(context) {
+      this.layers.forEach((layer) => layer.draw(context));
+    }
+  }
   class UI {
     constructor(game) {
       this.game = game;
@@ -141,6 +178,9 @@ window.addEventListener("load", function () {
       for (let i = 0; i < this.game.ammo; i++) {
         context.fillRect(20 + 5 * i, 50, 3, 20);
       }
+      //timer
+      const formattedTime = (this.game.gameTime * 0.001).toFixed(1);
+      context.fillText("Timer: " + formattedTime, 20, 100);
       //game over messages
       if (this.game.gameOver) {
         context.textAlign = "center";
@@ -175,6 +215,7 @@ window.addEventListener("load", function () {
       this.height = height;
       this.player = new Player(this);
       this.input = new InputHandler(this);
+      this.background = new Background(this);
       this.keys = [];
       this.enemies = [];
       this.enemyTimer = 0;
@@ -187,8 +228,13 @@ window.addEventListener("load", function () {
       this.gameOver = false;
       this.score = 0;
       this.winningScore = 10;
+      this.gameTime = 0;
+      this.timeLimit = 5000;
+      this.speed = 1;
     }
     update(deltaTime) {
+      this.background.update();
+      this.background.layer4.update();
       this.player.update();
       if (this.ammoTimer > this.ammoInterval) {
         if (this.ammo < this.maxAmmo) {
@@ -216,6 +262,8 @@ window.addEventListener("load", function () {
           }
         });
       });
+      if (!this.gameOver) this.gameTime += deltaTime;
+      if (this.gameTime > this.timeLimit) this.gameOver = true;
       this.enemies = this.enemies.filter((enemy) => !enemy.markedForDeletion);
       if (this.enemyTimer > this.enemyInterval && !this.gameOver) {
         this.addEnemy();
@@ -225,6 +273,8 @@ window.addEventListener("load", function () {
       }
     }
     draw(context) {
+      this.background.draw(context);
+      this.background.layer4.draw(context);
       this.player.draw(context);
       this.ui.draw(context);
       this.enemies.forEach((enemy) => {
