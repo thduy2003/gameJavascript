@@ -14,6 +14,8 @@ window.addEventListener("load", function () {
           this.game.keys.push(e.key);
         } else if (e.key === " ") {
           this.game.player.shootTop();
+        } else if (e.key === "d") {
+          this.game.debug = !this.game.debug;
         }
       });
       window.addEventListener("keyup", (e) => {
@@ -76,8 +78,8 @@ window.addEventListener("load", function () {
       );
     }
     draw(context) {
-      context.fillStyle = "black";
-      context.fillRect(this.x, this.y, this.width, this.height);
+      if (this.game.debug)
+        context.strokeRect(this.x, this.y, this.width, this.height);
       context.fillStyle = "red";
       context.font = "20px Helvetica";
       context.fillText(this.lives, this.x, this.y);
@@ -251,6 +253,7 @@ window.addEventListener("load", function () {
       this.gameTime = 0;
       this.timeLimit = 5000;
       this.speed = 1;
+      this.debug = false;
     }
     update(deltaTime) {
       this.background.update();
