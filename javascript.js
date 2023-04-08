@@ -172,6 +172,19 @@ window.addEventListener("load", function () {
       this.score = this.lives;
     }
   }
+  class LuckyFish extends Enemy {
+    constructor(game) {
+      super(game);
+      this.width = 99;
+      this.height = 95;
+      this.y = Math.random() * (this.game.height * 0.9 - this.height);
+      this.image = document.getElementById("lucky");
+      this.frameY = Math.floor(Math.random() * 2);
+      this.lives = 3;
+      this.score = this.lives;
+      this.type = "lucky";
+    }
+  }
   class Layer {
     constructor(game, image, speedModifier) {
       this.game = game;
@@ -187,8 +200,14 @@ window.addEventListener("load", function () {
       else this.x -= this.game.speed * this.speedModifier;
     }
     draw(context) {
-      context.drawImage(this.image, this.x, this.y);
-      context.drawImage(this.image, this.x + this.width, this.y);
+      context.drawImage(this.image, this.x, this.y, this.width, this.height);
+      context.drawImage(
+        this.image,
+        this.x + this.width,
+        this.y,
+        this.width,
+        this.height
+      );
     }
   }
   class Background {
@@ -338,8 +357,9 @@ window.addEventListener("load", function () {
     addEnemy() {
       const customized = Math.random();
 
-      if (customized < 0.5) this.enemies.push(new Anguler1(this));
-      else this.enemies.push(new Anguler2(this));
+      if (customized < 0.3) this.enemies.push(new Anguler1(this));
+      else if (customized < 0.6) this.enemies.push(new Anguler2(this));
+      else this.enemies.push(new LuckyFish(this));
     }
     checkCollision(rect1, rect2) {
       return (
