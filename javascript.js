@@ -264,7 +264,7 @@ window.addEventListener("load", function () {
     constructor(game) {
       this.game = game;
       this.fontSize = 25;
-      this.fontFamily = "Helvetica";
+      this.fontFamily = "Bangers";
       this.color = "white";
     }
     draw(context) {
@@ -292,17 +292,17 @@ window.addEventListener("load", function () {
           message1 = "You lose!";
           message2 = "Try again next time";
         }
-        context.font = "50px" + this.fontFamily;
+        context.font = "70px" + this.fontFamily;
         context.fillText(
           message1,
           this.game.width * 0.5,
-          this.game.height * 0.5 - 40
+          this.game.height * 0.5 - 20
         );
         context.font = "25px" + this.fontFamily;
         context.fillText(
           message2,
           this.game.width * 0.5,
-          this.game.height * 0.5 + 40
+          this.game.height * 0.5 + 20
         );
       }
       //ammo
