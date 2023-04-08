@@ -80,6 +80,10 @@ window.addEventListener("load", function () {
       this.projectiles = this.projectiles.filter(
         (projectile) => !projectile.markedForDeletion
       );
+      //boundaries
+      if (this.y > this.game.height - this.height * 0.5)
+        this.y = this.game.height - this.height * 0.5;
+      else if (this.y < -this.height * 0.5) this.y = -this.height * 0.5;
       //sprite animation
       if (this.frameX < this.maxFrame) {
         this.frameX++;
@@ -174,8 +178,10 @@ window.addEventListener("load", function () {
         this.height
       );
       context.fillStyle = "black";
-      context.font = "20px Helvetica";
-      context.fillText(this.lives, this.x, this.y);
+      if (this.game.debug) {
+        context.font = "20px Helvetica";
+        context.fillText(this.lives, this.x, this.y);
+      }
     }
   }
   class Anguler1 extends Enemy {
