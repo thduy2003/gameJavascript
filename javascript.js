@@ -292,6 +292,22 @@ window.addEventListener("load", function () {
       this.speedX = Math.random() * -1.2 - 0.2;
     }
   }
+  class Drone extends Enemy {
+    constructor(game, x, y) {
+      super(game);
+      this.width = 115;
+      this.height = 95;
+      this.x = x;
+      this.y = y;
+
+      this.image = document.getElementById("drone");
+      this.frameY = Math.floor(Math.random() * 2);
+      this.lives = 3;
+      this.score = this.lives;
+      this.type = "drone";
+      this.speedX = Math.random() * -4.2 - 0.5;
+    }
+  }
   class Layer {
     constructor(game, image, speedModifier) {
       this.game = game;
@@ -439,7 +455,7 @@ window.addEventListener("load", function () {
         if (this.checkCollision(this.player, enemy)) {
           enemy.markedForDeletion = true;
           this.player.lives--;
-          for (let i = 0; i < 10; i++) {
+          for (let i = 0; i < enemy.score; i++) {
             this.particles.push(
               new Particular(
                 this,
@@ -466,7 +482,18 @@ window.addEventListener("load", function () {
               enemy.markedForDeletion = true;
               this.score += enemy.score;
               if (this.score >= this.winningScore) this.gameOver = true;
-              for (let i = 0; i < 10; i++) {
+              if (enemy.type === "hive") {
+                for (let i = 0; i < 5; i++) {
+                  this.enemies.push(
+                    new Drone(
+                      this,
+                      enemy.x + Math.random() * enemy.width * 0.5,
+                      enemy.y + Math.random() * enemy.height * 0.5
+                    )
+                  );
+                }
+              }
+              for (let i = 0; i < enemy.score; i++) {
                 this.particles.push(
                   new Particular(
                     this,
