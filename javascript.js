@@ -79,21 +79,25 @@ window.addEventListener("load", function () {
         this.bounced < 2
       ) {
         this.bounced++;
-        this.speedY *= -0.9;
+        this.speedY *= -0.7;
       }
     }
     draw(context) {
+      context.save();
+      context.translate(this.x, this.y);
+      context.rotate(this.angle);
       context.drawImage(
         this.image,
         this.frameX * this.spriteSize,
         this.frameY * this.spriteSize,
         this.spriteSize,
         this.spriteSize,
-        this.x,
-        this.y,
+        this.size * -0.5,
+        this.size * -0.5,
         this.size,
         this.size
       );
+      context.restore();
     }
   }
   class Player {
